@@ -3,4 +3,4 @@
 
 **Components:**
 
-1) model, which contains the inital experiments done with simple ML algorithms without the KG or ensemble learning. <sub> This is purely a first attempt to compare it with the results of finalized model </sub>
+1) model, which contains the inital experiments done with simple ML algorithms without the KG or ensemble learning. This is purely a first attempt to compare it with the results of the finalized model.
