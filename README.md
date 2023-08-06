@@ -1,4 +1,4 @@
-# Skroutz
+# KG-Fraud-Detection
 ## This repository contains my work for my Bachelor's thesis. The main idea behind it to create a Fraud detection (FD) system utilizing a Knowledge graph (KG) with the assistance of ensemble learning. ##
 
 **Components:**
