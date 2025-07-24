@@ -1,6 +1,6 @@
 # 🧠 Credit Card Fraud Detection via Knowledge Graphs & Centrality-Based Features 💳🔍
 
-This repository contains the full implementation of our **bachelor thesis research** on enhancing Credit Card Fraud Detection (CCFD) through **graph-based analysis** and **machine learning**.
+This repository contains the full implementation of my **Bachelor Thesis Research** on enhancing Credit Card Fraud Detection (CCFD) through **graph-based analysis** and **machine learning**.
 
 By modeling transactions as a **Knowledge Graph**, we extracted **centrality-based features**, including weighted variants, to enrich traditional feature sets. These were then fed into a variety of classifiers, including **XGBoost**, **Bagging**, and others, achieving state-of-the-art performance on a real-world dataset.
 
