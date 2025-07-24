@@ -26,3 +26,27 @@ By modeling transactions as a **Knowledge Graph**, we extracted **centrality-bas
    ```bash
    git clone https://github.com/dimou-gk/KG-Fraud-Detection.git
    cd KG-Fraud-Detection
+
+2. Install required dependencies:
+   ```bash
+   pip install -r requirements.txt
+
+3. Make sure your Neo4j server is up and running, and update credentials in `graph_utils/neo4j_handler.py` accordingly.
+4. Run the main script:
+   ```bash
+   python Main.py
+Use the clfx parameter (e.g., clfx = "clf3") to select one of the following:
+| String | Classifier |
+|-------------|-------------|
+   | `clf1` | Decision Tree |
+   | `clf2` | Random Forest |
+   | `clf3` | XGBoost |
+   | `clf4` | K-NN |
+   | `clf5` | Logistic Regression |
+   | `clf6` | Naive Bayes |
+   | `clf7` | Bagging |
+
+
+## 📸 Project Pipeline Diagram
+
+![Pipeline Overview](assets/pipelineOverview.png)
