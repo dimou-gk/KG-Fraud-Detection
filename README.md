@@ -6,6 +6,27 @@ By modeling transactions as a **Knowledge Graph**, we extracted **centrality-bas
 
 ---
 
+## 📘 Citation
+If you use this code or research in your work, please cite:
+   ```bash
+   @InProceedings{BCIdimou2024,
+   author="Dimou, George Konstantinos and Koloniari, Georgia",
+   editor="B{\u{a}}dic{\u{a}}, Costin and Gu{\v{s}}ev, Marjan and Iftene, Adrian and Ivanovi{\'{c}}, Mirjana and Manolopoulos, Yannis and Xinogalos, Stelios",
+   title="Enhancing Credit Card Fraud Detection Using Knowledge Graphs and Centralities",
+   booktitle="Advances in ICT Research in the Balkans",
+   year="2025",
+   publisher="Springer Nature Switzerland",
+   address="Cham",
+   pages="14--29",
+   abstract="Detecting fraudulent activity in credit card transactions poses a serious challenge for financial institutions, which requires robust techniques that can accurately pinpoint fraudulent occurrences           while minimizing false positives. In this study, we introduce an innovative strategy to enhance Credit Card Fraud Detection (CCFD) by utilizing Knowledge Graphs and Centrality measures. We propose
+      creating a Knowledge Graph (KG) representing the credit card transaction network so as to capture connections and correlations between the transactions, and analyzing the KG to evaluate centrality
+      measures that capture the importance of nodes and relationships within the graph. These centrality measures are utilized to enhance the input features that are used to train Machine Learning
+      classifiers for fraud detection. Our experiments show that using the enhanced features significantly improved classification performance, providing better identification of fraudulent transactions,
+      especially through the combination of HITS and degree centrality.",
+      isbn="978-3-031-84093-7"
+   }
+   ```
+
 ## 📂 Repository Structure
 
 | File/Folder | Description |
@@ -50,3 +71,38 @@ Use the clfx parameter (e.g., clfx = "clf3") to select one of the following:
 ## 📸 Project Pipeline Diagram
 
 ![Pipeline Overview](assets/pipelineOverview.png)
+
+
+## Experimental Results
+
+| Algorithm | Precision | Recall | F1-Score |
+|-------------|-------------|-------------|-------------|
+| `XGB (Baseline)` | 0.984 | 0.826 | 0.898 |
+| `XGB (Eigen. + Degree)` | 0.988 | 0.842 | 0.91 |
+| `XGB (Hits + Degree)` | **0.99** | **0.856** | **0.9**2 |
+
+
+## 🔍 Highlights
+
+- ✅ Knowledge Graph creation using Neo4j to model transaction relationships.
+- 🧠 Centrality measures used as engineered features (weighted & unweighted).
+- 📈 Significant performance gains in fraud detection with ensemble models.
+- ⚖️ Addressed class imbalance using SMOTE oversampling.
+- 📊 Demonstrated value of feature selection and graph topology in structured data.
+
+
+## 🙏 Acknowledgements
+
+This research was developed as part of my Bachelor’s Thesis and became my first academic publication. I am deeply grateful to:
+- 👩‍🏫 Dr. Georgia Koloniari — for her continuous guidance, feedback, and support throughout the research process.
+
+
+## 🔭 Future Work
+
+- Integrate temporal graphs for time-aware fraud detection.
+- Explore graph neural networks (GNNs) for automated feature learning.
+- Implement real-time streaming with fraud prediction pipelines.
+
+
+## 📬 Contact
+Feel free to reach out with questions or suggestions
