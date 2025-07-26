@@ -27,6 +27,20 @@ If you use this code or research in your work, please cite:
    }
    ```
 
+Also consider citing the following work, the final draft of my thesis containing more information than the paper:
+   ```bash
+   @article{dimou_2023,
+   title={Enhancing credit card fraud detection using knowledge graphs and centralities: A comparative study of machine learning algorithms},
+   url={https://www.researchgate.net/publication/378736969_Enhancing_credit_card_fraud_detection_using_knowledge_graphs_and_centralities_A_comparative_study_of_machine_learning_algorithms},
+   DOI={https://doi.org/10.13140/RG.2.2.19515.80160},
+   journal={ResearchGate},
+   publisher={unknown},
+   author={Dimou, George Konstantinos},
+   year={2023},
+   month={Jun}
+   }
+   ```
+
 ## 📂 Repository Structure
 
 | File/Folder | Description |
