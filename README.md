@@ -67,7 +67,8 @@ Also consider citing the following work, the final draft of my thesis containing
    pip install -r requirements.txt
 
 3. Make sure your Neo4j server is up and running, and execute all the queries present in `graph_utils` accordingly.
-4. Run the main script:
+4. Before executing Main.py, please **alter the credentials to your local neo4j database (lines 84, 85 & 112)**
+5. Run the main script:
    ```bash
    python Main.py
 Use the clfx parameter (e.g., clfx = "clf3") to select one of the following:
