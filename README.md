@@ -49,7 +49,6 @@ Also consider citing the following work, the final draft of my thesis containing
 | `Main.py` | Main execution script for graph-enhanced experiments. Change `clfx` parameter on lines 272 & 274 to run different classifiers. |
 | `Train_Test.py` | Contains all reusable ML training and evaluation functions. |
 | `graph_utils/` | Utility functions for generating Knowledge Graphs, applying Neo4j queries, and computing centrality measures. |
-| `data/` | Placeholder for datasets (not included in repo). |
 | `assets/` | Visual assets such as pipeline diagrams and charts for documentation or publication. |
 
 ---
