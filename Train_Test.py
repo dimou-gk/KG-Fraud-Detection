@@ -1,4 +1,6 @@
 import sklearn
+import pandas as pd
+import numpy as np
 from pandas import DataFrame
 from sklearn.feature_selection import (
     VarianceThreshold,
@@ -14,8 +16,10 @@ from sklearn.metrics import (
     precision_score,
     recall_score,
     f1_score,
+    roc_curve,
 )
-import time
+
+import matplotlib.pyplot as plt
 
 
 def train_wth_centrality(clf_dictionary: dict, clfier: str, X: DataFrame, y: DataFrame):
@@ -24,11 +28,11 @@ def train_wth_centrality(clf_dictionary: dict, clfier: str, X: DataFrame, y: Dat
             ("feature_selection1", VarianceThreshold(threshold=0.0)),
             ("feature_selection2", SelectKBest(f_classif, k="all")),
             ("scaler", StandardScaler()),
-            ("resampler1", SMOTE(sampling_strategy="minority", random_state=42)),
-            (
-                "resampler2",
-                RandomUnderSampler(sampling_strategy="all", random_state=42),
-            ),
+            # ("resampler1", SMOTE(sampling_strategy="minority", random_state=42)),
+            # (
+            #     "resampler2",
+            #     RandomUnderSampler(sampling_strategy="all", random_state=42),
+            # ),
             ("clf", clf_dictionary[clfier]["method"]()),
         ],
         # verbose=True
@@ -49,6 +53,11 @@ def train_wth_centrality(clf_dictionary: dict, clfier: str, X: DataFrame, y: Dat
 
     grid_search.fit(X, y)
 
+    # Best features
+    # mask = grid_search.best_estimator_.named_steps["feature_selection2"].get_support()
+    # new_features = X.columns[mask]
+    # print(f"Best features selected by the feature selector: {new_features}")
+
     print(
         "Καλύτερα αποτελέσματα μέσω cross validation για {}:\n".format(
             clf_dictionary[clfier]["name"]
@@ -62,10 +71,14 @@ def train_wth_centrality(clf_dictionary: dict, clfier: str, X: DataFrame, y: Dat
 def test_with_centrality(
     clf_dictionary: dict, clfier: str, grid_search, skf, X: DataFrame, y: DataFrame
 ):
-    time_needed = time.time()
     best_params = {k.split("__")[1]: v for k, v in grid_search.best_params_.items()}
 
     best_clf = clf_dictionary[clfier]["method"](**best_params)
+
+    prec = 0
+    recall = 0
+    f1 = 0
+    conf_matrix_list_of_arrays = []
 
     print("Αποτελεσματα {}:".format(clf_dictionary[clfier]["name"]))
     for i, (train_index, test_index) in enumerate(skf.split(X, y)):
@@ -74,25 +87,57 @@ def test_with_centrality(
         X_train, y_train = X.iloc[train_index], y.iloc[train_index]
         X_test, y_test = X.iloc[test_index], y.iloc[test_index]
 
-        # X_temp_resampled, y_temp_resampled = knn_pipeline['resampler1'].fit_resample(X_train, y_train) #use resampler1
-        # X_resampled, y_resampled = knn_pipeline['resampler2'].fit_resample(X_temp_resampled, y_temp_resampled) #use resampler2
-        # best_clf.fit(X_resampled, y_resampled) #fit the classifier using the resampled data
-        # y_pred = best_clf.predict(X_resampled)
-
         # non-resampled fit/predict
         best_clf.fit(X_train, y_train)
         y_pred = best_clf.predict(X_test)
 
         conf_matr = confusion_matrix(y_test, y_pred)
 
-        # print("Accuracy: {:.2f}".format(accuracy_score(y_test, y_pred)))
+        # Store metrics to average them
+        prec += precision_score(y_test, y_pred)
+        recall += recall_score(y_test, y_pred)
+        f1 += f1_score(y_test, y_pred)
+        conf_matrix_list_of_arrays.append(conf_matr)
+
+        # Probability predictions for ROC
+        if hasattr(best_clf, "predict_proba"):
+            y_score = best_clf.predict_proba(X_test)[:, 1]
+        else:
+            y_score = best_clf.decision_function(X_test)
+
+        # Save one ROC curve (or average)
+        # fpr, tpr, _ = roc_curve(y_test, y_score)
+        # roc_data = pd.DataFrame({"fpr": fpr, "tpr": tpr})
+        # path = (
+        #     "roc_data_"
+        #     + clf_dictionary[clfier]["name"]
+        #     + "_quadruple_Unweigh_Degree_Unweigh_Eigen_Betwe_Close_centrality.csv"
+        # )
+        # roc_data.to_csv(path, index=False)
+
         print("Precision: {:.2f}".format(precision_score(y_test, y_pred)))
         print("Recall: {:.2f}".format(recall_score(y_test, y_pred)))
         print("F1: {:.2f}".format(f1_score(y_test, y_pred)))
-        print("Confgusion matrix:")
+        print("Confusion matrix:")
         print(
             "\n".join(
                 [" ".join(["{:5}".format(item) for item in row]) for row in conf_matr]
             )
         )
-        # print(f"Elapsed time: {(time.time()-time_needed)/60} in seconds")
+    print(f"Average Precision is: {prec/5}")
+    print(f"Average Recall is: {recall/5}")
+    print(f"Average F1 is: {f1/5}")
+    print(f"Average Confusion Matrix is: {np.mean(conf_matrix_list_of_arrays, axis=0)}")
+
+    # Feature Importance (Only for Logistic Regression)
+    # if clfier == "clf2":
+    #     features = X.columns
+    #     coefficients = best_clf.coef_[0]
+    #     # print(coefficients)
+    #     # print(type(coefficients))
+
+    #     plt.barh(features, coefficients)
+    #     plt.title("Coefficients of Linear Regression")
+    #     plt.xlabel("Features")
+    #     plt.ylabel("Coefficients")
+    #     plt.show()
