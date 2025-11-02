@@ -125,14 +125,14 @@ def main():
     # driver = GraphDatabase.driver(uri, auth=("neo4j", "12345678"))
 
     # Baseline
-    query = """ MATCH (u:User)-[made:MADE_A]->(t:Transaction)-[with:WITH_]->(v:User)
-                MATCH (t)-[at:AT]->(tm:Time)
-                RETURN u.name AS org_name, made.oldbalanceOrg as oldbalanceOrg, made.newbalanceOrg as newbalanceOrg,
-                        t.amount AS amount, t.transType AS trans_type, t.isFraud AS isFraud,
-                        with.oldbalanceDest as oldbalanceDest, with.newbalanceDest as newbalanceDest,
-                        v.name AS dest_name,
-                        tm.hour AS time_hour
-    """
+    # query = """ MATCH (u:User)-[made:MADE_A]->(t:Transaction)-[with:WITH_]->(v:User)
+    #             MATCH (t)-[at:AT]->(tm:Time)
+    #             RETURN u.name AS org_name, made.oldbalanceOrg as oldbalanceOrg, made.newbalanceOrg as newbalanceOrg,
+    #                     t.amount AS amount, t.transType AS trans_type, t.isFraud AS isFraud,
+    #                     with.oldbalanceDest as oldbalanceDest, with.newbalanceDest as newbalanceDest,
+    #                     v.name AS dest_name,
+    #                     tm.hour AS time_hour
+    # """
 
     # Single (Hits) Centrality
     # query = """ MATCH (u:User)-[made:MADE_A]->(t:Transaction)-[with:WITH_]->(v:User)
@@ -174,17 +174,17 @@ def main():
     # """
 
     # Quadruple (Degree & Eigenvector & Betweenness & Closeness) Centralities
-    # query = """ MATCH (u:User)-[made:MADE_A]->(t:Transaction)-[with:WITH_]->(v:User)
-    #             MATCH (t)-[at:AT]->(tm:Time)
-    #             RETURN u.name AS org_name, made.oldbalanceOrg as oldbalanceOrg, made.newbalanceOrg as newbalanceOrg,
-    #                     t.amount AS amount, t.transType AS trans_type, t.isFraud AS isFraud,
-    #                     with.oldbalanceDest as oldbalanceDest, with.newbalanceDest as newbalanceDest,
-    #                     v.name AS dest_name,
-    #                     tm.hour AS time_hour,
-    #                     u.degree AS org_degree, u.eigenvector_unweighted as org_eigenvector_unweighted, u.betweenness as org_betweenness, u.closeness as org_closeness,
-    #                     v.degree AS dest_degree, v.eigenvector_unweighted as dest_eigenvector_unweighted, v.betweenness as dest_betweenness, v.closeness as dest_closeness,
-    #                     tm.degree AS time_degree, tm.eigenvector_unweighted as time_eigenvector_unweighted, tm.betweenness as time_betweenness, tm.closeness as time_closeness
-    # """
+    query = """ MATCH (u:User)-[made:MADE_A]->(t:Transaction)-[with:WITH_]->(v:User)
+                MATCH (t)-[at:AT]->(tm:Time)
+                RETURN u.name AS org_name, made.oldbalanceOrg as oldbalanceOrg, made.newbalanceOrg as newbalanceOrg,
+                        t.amount AS amount, t.transType AS trans_type, t.isFraud AS isFraud,
+                        with.oldbalanceDest as oldbalanceDest, with.newbalanceDest as newbalanceDest,
+                        v.name AS dest_name,
+                        tm.hour AS time_hour,
+                        u.degree AS org_degree, u.eigenvector_unweighted as org_eigenvector_unweighted, u.betweenness as org_betweenness, u.closeness as org_closeness,
+                        v.degree AS dest_degree, v.eigenvector_unweighted as dest_eigenvector_unweighted, v.betweenness as dest_betweenness, v.closeness as dest_closeness,
+                        tm.degree AS time_degree, tm.eigenvector_unweighted as time_eigenvector_unweighted, tm.betweenness as time_betweenness, tm.closeness as time_closeness
+    """
 
     # Removal of features
     # query = """ MATCH (u:User)-[made:MADE_A]->(t:Transaction)-[with:WITH_]->(v:User)
@@ -267,32 +267,37 @@ def main():
     # Change the "clf" string inside the train_with_centrality & test_with_centrality
     # function parameters according to which algorithm you want to execute
     # (based on the classifiers_dict)
-    time_needed = time.time()
-    grid_search_results, stratifks = train_wth_centrality(
-        classifiers_dict, "clf7", X, y
-    )
-    test_with_centrality(classifiers_dict, "clf7", grid_search_results, stratifks, X, y)
-    print(f"Elapsed time: {(time.time()-time_needed)/60} minutes")
+    # time_needed = time.time()
+    # grid_search_results, stratifks = train_wth_centrality(
+    #     classifiers_dict, "clf7", X, y
+    # )
+    # test_with_centrality(classifiers_dict, "clf7", grid_search_results, stratifks, X, y)
+    # print(f"Elapsed time: {(time.time()-time_needed)/60} minutes")
 
     # Try all the Classification Algorithms in a loop
-    # for clf_key in classifiers_dict:
-    #     time_needed = time.time()
+    for clf_key in classifiers_dict:
+        time_needed = time.time()
 
-    #     try:
-    #         # Train the model with cross-validation
-    #         grid_search_results, skf = train_wth_centrality(
-    #             classifiers_dict, clf_key, X, y
-    #         )
+        try:
+            # Train the model with cross-validation
+            grid_search_results, skf = train_wth_centrality(
+                classifiers_dict, clf_key, X, y
+            )
 
-    #         # Test the model
-    #         test_with_centrality(
-    #             classifiers_dict, clf_key, grid_search_results, skf, X, y
-    #         )
+            # Test the model
+            test_with_centrality(
+                classifiers_dict,
+                clf_key,
+                grid_search_results,
+                skf,
+                X,
+                y,
+                centrality_name="degree_eigenvector_betweenness_closeness_quadruple",
+            )
+            print(f"Elapsed time: {(time.time()-time_needed)/60} minutes")
 
-    #         print(f"Elapsed time: {(time.time()-time_needed)/60} minutes")
-
-    #     except Exception as e:
-    #         print(f"An error occurred with classifier {clf_key}: {e}")
+        except Exception as e:
+            print(f"An error occurred with classifier {clf_key}: {e}")
 
 
 if __name__ == "__main__":
