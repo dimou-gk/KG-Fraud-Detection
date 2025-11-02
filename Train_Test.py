@@ -69,7 +69,13 @@ def train_wth_centrality(clf_dictionary: dict, clfier: str, X: DataFrame, y: Dat
 
 
 def test_with_centrality(
-    clf_dictionary: dict, clfier: str, grid_search, skf, X: DataFrame, y: DataFrame
+    clf_dictionary: dict,
+    clfier: str,
+    grid_search,
+    skf,
+    X: DataFrame,
+    y: DataFrame,
+    centrality_name: str = "default",
 ):
     best_params = {k.split("__")[1]: v for k, v in grid_search.best_params_.items()}
 
@@ -81,6 +87,9 @@ def test_with_centrality(
     conf_matrix_list_of_arrays = []
 
     print("Αποτελεσματα {}:".format(clf_dictionary[clfier]["name"]))
+
+    roc_curves = []
+
     for i, (train_index, test_index) in enumerate(skf.split(X, y)):
         print("Fold {}:".format(i + 1))
 
@@ -115,6 +124,11 @@ def test_with_centrality(
         # )
         # roc_data.to_csv(path, index=False)
 
+        # Compute ROC for this fold
+        fpr, tpr, _ = roc_curve(y_test, y_score)
+        fold_df = pd.DataFrame({"fpr": fpr, "tpr": tpr, "fold": i + 1})
+        roc_curves.append(fold_df)
+
         print("Precision: {:.2f}".format(precision_score(y_test, y_pred)))
         print("Recall: {:.2f}".format(recall_score(y_test, y_pred)))
         print("F1: {:.2f}".format(f1_score(y_test, y_pred)))
@@ -129,6 +143,23 @@ def test_with_centrality(
     print(f"Average F1 is: {f1/5}")
     print(f"Average Confusion Matrix is: {np.mean(conf_matrix_list_of_arrays, axis=0)}")
 
+    # -------------------------------------#
+    # Combine ROC data from all folds
+    roc_data = pd.concat(roc_curves, ignore_index=True)
+
+    # --- dynamic naming for ROC CSV ---
+    import os
+    from datetime import datetime
+
+    os.makedirs("roc_results", exist_ok=True)  # keep them organized
+
+    clf_name = clf_dictionary[clfier]["name"].replace(" ", "_")
+
+    filename = f"roc_results/ROC_{clf_name}_{centrality_name}.csv"
+
+    roc_data.to_csv(filename, index=False)
+
+    # -------------------------------------#
     # Feature Importance (Only for Logistic Regression)
     # if clfier == "clf2":
     #     features = X.columns
