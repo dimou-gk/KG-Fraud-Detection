@@ -65,7 +65,7 @@ Also consider citing the following work, the final draft of my thesis containing
    pip install -r requirements.txt
 
 3. Make sure your Neo4j server is up and running, and execute all the queries present in `graph_utils` accordingly.
-4. Before executing Main.py, please **alter the credentials to your local neo4j database (lines 84, 85 & 112)**
+4. Before executing Main.py, please **alter the credentials to your local neo4j database (lines 121, 122 & 241)**
 5. Run the main script:
    ```bash
    python Main.py
