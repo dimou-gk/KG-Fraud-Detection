@@ -72,13 +72,14 @@ Also consider citing the following work, the final draft of my thesis containing
 Use the clfx parameter (e.g., clfx = "clf3") to select one of the following:
 | String | Classifier |
 |-------------|-------------|
-   | `clf1` | Decision Tree |
-   | `clf2` | Random Forest |
-   | `clf3` | XGBoost |
-   | `clf4` | K-NN |
-   | `clf5` | Logistic Regression |
-   | `clf6` | Naive Bayes |
-   | `clf7` | Bagging |
+   | `clf1` | K Nearest Neighbor |
+   | `clf2` | Logistic Regression |
+   | `clf3` | Support Vector Machine |
+   | `clf4` | Naive Bayes |
+   | `clf5` | Decision Tree |
+   | `clf6` | Random Forest |
+   | `clf7` | XGBoost |
+   | `clf8` | Bagging |
 
 
 ## 📸 Project Pipeline Diagram
